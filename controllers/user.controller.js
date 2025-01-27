@@ -37,6 +37,7 @@ const registerUser = async (req, res) => {
     }
 }
 
+// Login a registered user
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
@@ -59,7 +60,46 @@ const loginUser = async (req, res) => {
     }
 }
 
+// Get a user by ID
+const getUserProfile = async (req, res) => {
+    const userId = req.user.id;
+    try {
+        const user = await User.findById(userId).select("-password");
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+        res.status(200).json({ success: true, message: "User profile retrieved successfully.", data: user });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error getting user profile.", error: error.message });
+    }
+}
+
+// Update a user by ID
+const updateUserProfile = async (req, res) => {
+    const { name, email, address, phone } = req.body;
+    const userId = req.user.id;
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        user.name = name || user.name;
+        user.email = email || user.email;
+        user.address = address || user.address;
+        user.phone = phone || user.phone;
+
+        const updatedUser = await user.save();
+        res.status(200).json({ success: true, message: "User profile updated successfully.", data: updatedUser });
+        
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error updating user profile.", error: error.message})
+    }
+}
+
 module.exports = {
     registerUser,
-    loginUser
+    loginUser,
+    getUserProfile,
+    updateUserProfile
 }
