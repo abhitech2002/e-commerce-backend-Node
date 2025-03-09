@@ -28,4 +28,13 @@ const getAllProducts = asyncHandler(async (req, res) => {
     res.status(200).json({ success: true, message: "Fetched all product successfully", data: products });
 });
 
-module.exports = { addProduct, getAllProducts};
+const getProductById = asyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id);
+    if(product) {
+        res.status(200).json({ success: true, message: "Fetched product successfully", data: product });
+    } else {
+        res.status(404).json({ success: false, message: "Product not found" });
+    }
+})
+
+module.exports = { addProduct, getAllProducts, getProductById};
