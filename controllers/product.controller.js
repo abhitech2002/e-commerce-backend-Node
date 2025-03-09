@@ -23,4 +23,9 @@ const addProduct = asyncHandler(async (req, res) => {
     res.status(201).json({ success: true, message: "New Product Added Successfully" , data: result });
 });
 
-module.exports = { addProduct };
+const getAllProducts = asyncHandler(async (req, res) => {
+    const products = await Product.find({});
+    res.status(200).json({ success: true, message: "Fetched all product successfully", data: products });
+});
+
+module.exports = { addProduct, getAllProducts};
