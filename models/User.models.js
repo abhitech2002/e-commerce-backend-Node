@@ -36,4 +36,18 @@ const userSchema = mongoose.Schema(
   { timestamps: true }
 );
 
+userSchema.pre("save", function(next) {
+    if(this.isAdmin) {
+        this.role = "admin";
+    }
+    next()
+})
+
+userSchema.pre("save", function(next) {
+    if(this.isAdmin && this.role !== "admin") {
+        return next(new Error("Admin must have admin role"));
+    }
+    next()
+})
+
 module.exports = mongoose.model("User", userSchema);
