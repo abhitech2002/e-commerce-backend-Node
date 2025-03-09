@@ -11,7 +11,7 @@ app.use(express.json());
 
 connectDB();
 
-app.use('/api/users', userRoutes);
+app.use('/api/v1/users', userRoutes);
 
 console.log(`Environment: ${process.env.NODE_ENV}`);
 
