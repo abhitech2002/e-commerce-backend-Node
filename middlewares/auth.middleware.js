@@ -11,6 +11,8 @@ const protect = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(" ")[1];
 
+      if (!token) return res.status(401).json({ success: false, message: 'Unauthorized' });
+
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
       req.user = await User.findById(decoded.id).select("-password");
@@ -33,4 +35,14 @@ const protect = async (req, res, next) => {
   }
 };
 
-module.exports = { protect };
+const adminOnly = (req, res, next) => {
+  if (req.user && req.user.isAdmin) {
+    next();
+  } else {
+    return res
+      .status(401)
+      .json({ success: false, message: "Admin access required" });
+  }
+}
+
+module.exports = { protect, adminOnly };

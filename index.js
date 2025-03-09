@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const connectDB = require("./config/db")
 const userRoutes = require('./routes/user.routes.js');
+const productRoutes = require('./routes/product.routes.js')
 
 dotenv.config();
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.json());
 connectDB();
 
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/products', productRoutes);
 
 console.log(`Environment: ${process.env.NODE_ENV}`);
 
